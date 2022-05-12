@@ -218,6 +218,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		Scanner sc = new Scanner(System.in);
 		String choiseStr;
+		System.out.println("Hello");
 		loop: while (true) {
 			
 			choiseStr = sc.next();
