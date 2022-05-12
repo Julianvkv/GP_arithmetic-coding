@@ -1,79 +1,221 @@
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Objects;
 import java.util.Scanner;
 
-class arithmeticCoding{
-	
-	public static void start_enconding(String sourceFile, String resultFile) {
-		//TODO Start encoding a stream of symbols
+abstract class ArithmeticCoderBase {
+
+	public ArithmeticCoderBase(int numBits) {
+		
 	}
-	
-	public static void start_decoding(String sourceFile, String resultFile) {
-		//TODO Start decoding a stream of symbols
+
+	protected void update(UpdateModel frequency, int symbol) throws IOException {
+
 	}
-	
-	public static void encode_symbol(int symbol, int[] frequencies){
-		//TODO Encode a symbol
-	}
-	
-	public static int decode_symbol(int[] frequencies) {
-		//TODO Decode next symbol
-		return 0;
-	}
-	
-	public static void done_encoding() {
-		//TODO Finish encoding the stream
-	}
-	
-	public static void bit_plus_follow(int bit) {
-		//TODO Output bits plus following opposite bits
-	}
-	
-	public static void start_inputing_bits() {
-		//TODO Initialize bit input
-	}
-	
-	public static int input_bit() {
-		//TODO Input a bit
-		return 0;
-	}
-	
-	public static void output_bit(int bit) {
-		//TODO Output a bit
-	}
+
+	protected abstract void shift() throws IOException;
+
+	protected abstract void underflow() throws IOException;	
 }
 
-class model {
+class Encoder extends ArithmeticCoderBase {
 	
-	public static void comp() {
-		//TODO Set up other modules
+	public Encoder(int numBits, BitOutputStream out) {
+		super(numBits);
+	}
+
+	public void write(ModelBase frequency, int symbol) throws IOException {
+		
+	}
+
+	public void write(UpdateModel frequency, int symbol) throws IOException {
+		
+	}
+
+	public void finish() throws IOException {
+		
+	}
+		
+	protected void shift() throws IOException {
+		
+	}
+		
+	protected void underflow() {
+
+	}	
+}
+
+class Decoder extends ArithmeticCoderBase {
+
+
+	public Decoder(int numBits, BitInputStream in) throws IOException {
+		super(numBits);
+	}
+
+	public int read(ModelBase frequency) throws IOException {
+		return 0;
+	}
+
+	public int read(UpdateModel frequency) throws IOException {
+		return 0;
+	}
+		
+	protected void shift() throws IOException {
+
+	}
+		
+	protected void underflow() throws IOException {
+
 	}
 	
-	public static void decomp() {
-		//TODO Set up other modules
-	}
+	private int read_code_bit() throws IOException {
+		return 0;
+	}	
+}
+
+abstract class ModelBase {
+
+	public abstract int get_symbol_limit();
+
+	public abstract int get(int symbol);
+
+	public abstract void increment(int symbol);
+
+	public abstract int get_total();
+
+	public abstract int get_low(int symbol);
+
+	public abstract int get_high(int symbol);
 	
-	public static void start_model(){
-		//TODO Initialize the model
+}
+
+class StartModel extends ModelBase {
+
+	public StartModel(int numSyms) {
+
 	}
-	
-	public static void update_model(int symbol) {
-		//TODO Update the model to account for a new symbol
+
+	public int get_symbol_limit() {
+		return 0;
 	}
-	
-	public static void start_outputing_bits() {
-		//TODO Initialize for bit output
+
+	public int get(int symbol) {
+		return 0;
 	}
-	
-	public static void done_outputing_bits() {
-		//TODO Flush out the last bits
+
+	public int get_total() {
+		return 0;
 	}
+
+	public int get_low(int symbol) {
+		return 0;
+	}
+
+	public int get_high(int symbol) {
+		return 0;
+	}
+
+	public void increment(int symbol) {
+		
+	}	
+}
+
+class UpdateModel extends ModelBase {
+
+	public UpdateModel(int[] frequency) {
+
+	}
+
+	public UpdateModel(ModelBase frequency) {
+
+	}
+
+	public int get_symbol_limit() {
+		return 0;
+	}
+
+	public int get(int symbol) {
+		return 0;
+	}
+
+	public void set(int symbol, int freq) {		
+
+	}
+
+	public void increment(int symbol) {
+
+	}
+
+	public int get_total() {
+		return 0;
+	}
+
+	public int get_low(int symbol) {
+		return 0;
+	}
+
+	public int get_high(int symbol) {
+		return 0;
+	}
+
+	private void init_sum_of_frequencies() {
+
+	}
+
+	public String to_string() {
+		return null;
+	}
+		
+	private int add_int(int x, int y) {
+		return 0;
+	}	
+}
+
+class BitInputStream implements AutoCloseable {
+
+	public BitInputStream(InputStream in) {
+
+	}
+
+	public int read() throws IOException {
+		return 0;
+	}
+
+	public int read_eof() throws IOException {
+		return 0;
+	}
+
+	public void close() throws IOException {
+
+	}	
+}
+
+class BitOutputStream implements AutoCloseable {
+
+	public BitOutputStream(OutputStream out) {
+
+	}
+
+	public void write(int b) throws IOException {
+
+	}
+
+	public void close() throws IOException {
+
+	}	
 }
 
 public class Main {
-
-	public static void main(String[] args) {
+	
+	public static void main(String[] args) throws IOException {
 		Scanner sc = new Scanner(System.in);
 		String choiseStr;
 		loop: while (true) {
@@ -81,7 +223,6 @@ public class Main {
 			choiseStr = sc.next();
 								
 			switch (choiseStr) {
-			// TODO Interface 
 			case "comp":
 				break;
 			case "decomp":
@@ -99,54 +240,12 @@ public class Main {
 
 		sc.close();
 	}
-
-	public static void size(String sourceFile) {
-		try {
-			FileInputStream f = new FileInputStream(sourceFile);
-			System.out.println("size: " + f.available());
-			f.close();
-		}
-		catch (IOException ex) {
-			System.out.println(ex.getMessage());
-		}
 		
+	static void comp(InputStream in, BitOutputStream out) throws IOException {
+
 	}
 	
-	public static boolean equal(String firstFile, String secondFile) {
-		try {
-			FileInputStream f1 = new FileInputStream(firstFile);
-			FileInputStream f2 = new FileInputStream(secondFile);
-			int k1, k2;
-			byte[] buf1 = new byte[1000];
-			byte[] buf2 = new byte[1000];
-			do {
-				k1 = f1.read(buf1);
-				k2 = f2.read(buf2);
-				if (k1 != k2) {
-					f1.close();
-					f2.close();
-					return false;
-				}
-				for (int i=0; i<k1; i++) {
-					if (buf1[i] != buf2[i]) {
-						f1.close();
-						f2.close();
-						return false;
-					}
-						
-				}
-			} while (k1 == 0 && k2 == 0);
-			f1.close();
-			f2.close();
-			return true;
-		}
-		catch (IOException ex) {
-			System.out.println(ex.getMessage());
-			return false;
-		}
-	}
-	
-	public static void about() {
-		// TODO insert information about authors
-	}
+	static void decomp(BitInputStream in, OutputStream out) throws IOException {
+
+	}	
 }
